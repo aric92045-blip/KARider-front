@@ -37,3 +37,11 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+
+# Variables de entorno: solo se sube la plantilla
+.env
+.env.*
+!.env.example
+
+# PWA (generado en dev)
+dev-dist

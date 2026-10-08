@@ -1,0 +1,39 @@
+/* Tokens de diseño de KARider (mockups P1–P11) */
+:root {
+  --color-primario: #1d2d44;
+  --color-primario-claro: #2c4363;
+  --color-acento: #0284c7;
+  --color-acento-claro: #e0f2fe;
+  --color-exito: #15803d;
+  --color-exito-claro: #dcfce7;
+  --color-error: #b91c1c;
+  --color-error-claro: #fee2e2;
+  --color-aviso: #a16207;
+  --color-aviso-claro: #fef9c3;
+
+  --color-fondo: #f5f7fa;
+  --color-superficie: #ffffff;
+  --color-borde: #d4dbe5;
+  --color-texto: #1d2d44;
+  --color-texto-suave: #5b6b80;
+  --color-deshabilitado: #a7b1bf;
+
+  --radio-sm: 8px;
+  --radio-md: 12px;
+  --radio-lg: 20px;
+  --radio-pill: 999px;
+
+  --espacio-1: 4px;
+  --espacio-2: 8px;
+  --espacio-3: 12px;
+  --espacio-4: 16px;
+  --espacio-5: 24px;
+  --espacio-6: 32px;
+
+  --sombra-sm: 0 1px 2px rgb(29 45 68 / 8%);
+  --sombra-md: 0 4px 16px rgb(29 45 68 / 10%);
+
+  --fuente: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --alto-nav: 64px;
+  --ancho-max: 560px;
+}
