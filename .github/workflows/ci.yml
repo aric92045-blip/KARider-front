@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop]
+
+jobs:
+  calidad:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test:ci
+      - run: npm run build
+        env:
+          # Solo para compilar en CI; producción la define el workflow de Azure Static Web Apps
+          VITE_API_BASE_URL: https://localhost
