@@ -1,0 +1,48 @@
+# Despliegue del front a Azure App Service "KARider-front" (Linux, Node) con perfil de publicación.
+# Las variables VITE_* se escriben en el JavaScript al compilar: van aquí, no en la configuración
+# del App Service. Azure arranca deploy/server.js con `npm start` (deploy/package.json) para servir la SPA.
+name: Deploy Azure
+
+on:
+  push:
+    branches: [release]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-front
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run test:ci
+
+      - name: Compilar
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: https://karider-back-b5e7cchwaragg5cq.northcentralus-01.azurewebsites.net
+          VITE_APP_NOMBRE: KARider
+          VITE_DOMINIO_INSTITUCIONAL: uttt.edu.mx
+          VITE_ZONA_HORARIA: America/Mexico_City
+
+      - name: Agregar el servidor de la SPA
+        run: cp deploy/server.js deploy/package.json dist/
+
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: KARider-front
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_FRONT }}
+          package: dist
