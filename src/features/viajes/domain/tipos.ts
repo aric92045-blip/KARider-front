@@ -1,5 +1,10 @@
 export type EstadoViaje = 'Borrador' | 'Programado' | 'EnCurso' | 'Completado' | 'Cancelado'
 
+export type EstadoReserva = 'Pendiente' | 'Confirmada' | 'Rechazada' | 'Cancelada' | 'Completada'
+
+/** Criterios de orden del listado (HU-06). */
+export type OrdenViajes = 'Horario' | 'MenorAporte' | 'Calificacion'
+
 export interface Vehiculo {
   id: string
   modelo: string
@@ -45,6 +50,8 @@ export interface ViajeDetalle {
   vehiculo: { modelo: string; color: string; anio: number; placas: string; verificado: boolean }
   puntoEncuentro: PuntoEncuentroViaje
   destino: string
+  destinoLatitud: number | null
+  destinoLongitud: number | null
   paradas: { orden: number; nombre: string }[]
   fechaSalida: string
   gastoTotal: number
@@ -54,10 +61,30 @@ export interface ViajeDetalle {
   notas: string | null
   estado: EstadoViaje
   esPropietario: boolean
+  /** Reserva del usuario autenticado en este viaje (si la tiene). */
+  miReserva: MiReserva | null
+}
+
+export interface MiReserva {
+  id: string
+  folio: string
+  estado: EstadoReserva
+  asientos: number
+  montoAporte: number
+}
+
+export interface ConductorResumen {
+  id: string
+  nombreCompleto: string
+  carrera: string
+  fotoUrl: string | null
+  calificacion: number
+  totalCalificaciones: number
 }
 
 export interface ViajeResumen {
   id: string
+  conductor: ConductorResumen
   puntoEncuentro: PuntoEncuentroViaje
   destino: string
   paradas: string[]
@@ -76,4 +103,22 @@ export interface PagedResult<T> {
   total: number
   totalPaginas: number
   tieneSiguiente: boolean
+}
+
+export interface BuscarViajesParams {
+  destino?: string
+  puntoEncuentroId?: number
+  fecha?: string
+  orden?: OrdenViajes
+  pagina?: number
+  tamanoPagina?: number
+}
+
+/** Última posición que compartió el conductor (P8). */
+export interface UbicacionConductor {
+  latitud: number
+  longitud: number
+  actualizadaEn: string
+  estadoViaje: EstadoViaje
+  puntoEncuentro: PuntoEncuentroViaje
 }
