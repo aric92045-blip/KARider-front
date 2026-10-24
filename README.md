@@ -61,7 +61,7 @@ Configuración (una sola vez):
 2. En el proyecto: **Administration › Analysis Method** › desactiva **Automatic Analysis**.
 3. **My Account › Security** › genera un token.
 4. En GitHub: **Settings › Secrets and variables › Actions** › secret `SONAR_TOKEN` con ese token.
-5. Si la organización o la clave del proyecto cambian, crea las variables `SONAR_ORGANIZATION` y `SONAR_PROJECT_KEY`.
+5. Si la organización o la clave del proyecto cambian, actualízalas en `sonar-project.properties`.
 
 Ejecución manual: **Actions › Calidad de código (SonarQube Cloud) › Run workflow**.
 Localmente se puede revisar la cobertura con `npm run test:coverage` (abre `coverage/lcov-report/index.html`).
