@@ -44,7 +44,7 @@ jobs:
 
       - name: Instalar dependencias
         if: env.SONAR_TOKEN != ''
-        run: npm ci
+        run: npm ci --ignore-scripts # sin scripts de instalación de terceros
 
       - name: Pruebas con cobertura
         if: env.SONAR_TOKEN != ''
