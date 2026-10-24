@@ -1,0 +1,59 @@
+# Análisis automático de calidad con SonarQube Cloud (plan gratuito para repositorios públicos).
+# Requisitos (ver README › Calidad de código):
+#   - Secret del repositorio SONAR_TOKEN (generado en sonarcloud.io › My Account › Security).
+#   - "Automatic Analysis" desactivado en SonarQube Cloud (Administration › Analysis Method).
+#   - Opcionales: variables SONAR_ORGANIZATION y SONAR_PROJECT_KEY si difieren de sonar-project.properties.
+name: Calidad de código (SonarQube Cloud)
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: sonar-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sonar:
+    name: Análisis SonarQube Cloud
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # historial completo: Sonar lo usa para detectar código nuevo
+
+      - name: Verificar configuración
+        if: env.SONAR_TOKEN == ''
+        run: |
+          echo "::warning::Falta el secret SONAR_TOKEN; se omite el análisis. Ver README › Calidad de código."
+
+      - uses: actions/setup-node@v4
+        if: env.SONAR_TOKEN != ''
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        if: env.SONAR_TOKEN != ''
+        run: npm ci
+
+      - name: Pruebas con cobertura
+        if: env.SONAR_TOKEN != ''
+        run: npm run test:coverage
+
+      - name: Análisis SonarQube Cloud
+        if: env.SONAR_TOKEN != ''
+        uses: SonarSource/sonarqube-scan-action@v5
+        with:
+          args: >
+            ${{ vars.SONAR_ORGANIZATION && format('-Dsonar.organization={0}', vars.SONAR_ORGANIZATION) || '' }}
+            ${{ vars.SONAR_PROJECT_KEY && format('-Dsonar.projectKey={0}', vars.SONAR_PROJECT_KEY) || '' }}
